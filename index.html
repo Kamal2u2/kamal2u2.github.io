@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamal Gyawali | Entrepreneur, Trader, Tech Builder</title>
+    <meta name="description" content="Portfolio of Kamal Gyawali - Bridging Nepal & Europe through Tech, Business, and Web3.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google Fonts: Inter for that premium Stripe/Vercel feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Libraries: GSAP, Three.js, Typed.js, Vanilla-Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        darkBg: '#050505',
+                        lightBg: '#fafafa',
+                        primary: '#3b82f6', // Electric Blue
+                        accent: '#8b5cf6', // Neon Purple
+                        success: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styling & Glassmorphism */
+        body {
+            transition: background-color 0.5s ease, color 0.5s ease;
+            cursor: none; /* Hide default cursor */
+            overflow-x: hidden;
+        }
+
+        /* 3D Canvas Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .glass-panel {
+            background: rgba(17, 17, 17, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .light .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: textShine 4s linear infinite;
+        }
+
+        @keyframes textShine {
+            to { background-position: 200% center; }
+        }
+
+        /* Original Clean Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #3b82f6;
+        }
+        .cursor-outline {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .dark .cursor-dot { background-color: #8b5cf6; }
+        .dark .cursor-outline { border-color: rgba(139, 92, 246, 0.5); }
+
+        @media (hover: none) and (pointer: coarse) {
+            .cursor-dot, .cursor-outline { display: none; }
+            body { cursor: auto; }
+        }
+
+        /* Terminal Window */
+        .terminal-header {
+            background: #2d2d2d;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+        .mac-btn {
+            width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px;
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        /* Mobile Menu Transition */
+        #mobile-menu {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #mobile-menu.closed {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        /* Hide Scrollbar but keep functionality */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.6); }
+
+        /* GSAP Initial States */
+        .gsap-reveal { opacity: 0; visibility: hidden; }
+    </style>
+</head>
+<body class="bg-lightBg text-gray-900 dark:bg-darkBg dark:text-gray-100 selection:bg-accent selection:text-white transition-colors duration-300">
+
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-1 w-full bg-gradient-to-r from-primary to-accent z-[100]"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center glass-panel rounded-b-2xl md:rounded-full md:mt-4 md:mx-auto md:w-[95%] border-t-0 transition-all duration-300" id="nav-container">
+            <a href="#home" class="text-xl font-bold tracking-tight hover-target flex items-center gap-3">
+                <img src="Gemini_Generated_Image_1h8m9s1h8m9s1h8m.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop';" alt="Kamal Gyawali" class="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-white/20 grayscale contrast-125 brightness-90 shadow-sm">
+                KAMAL<span class="text-primary">.</span>
+            </a>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#about" class="opacity-70 hover:opacity-100 transition-opacity hover-target">About</a>
+                <a href="#expertise" class="opacity-70 hover:opacity-100 transition-opacity hover-target">Expertise</a>
+                <a href="#ventures" class="opacity-70 hover:opacity-100 transition-opacity hover-target">Ventures</a>
+                <a href="#timeline" class="opacity-70 hover:opacity-100 transition-opacity hover-target">Timeline</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover-target hover:scale-110 transition-transform">
+                    <i class="ph ph-moon text-xl dark:hidden"></i>
+                    <i class="ph ph-sun text-xl hidden dark:block text-yellow-300"></i>
+                </button>
+                <a href="#contact" class="hidden md:flex px-5 py-2 bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary hover:text-white transition-all font-medium text-sm hover-target">
+                    Connect
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full glass-panel flex items-center justify-center hover-target">
+                    <i class="ph ph-list text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="md:hidden closed absolute top-full left-0 w-full px-6 mt-2">
+            <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4 text-center shadow-2xl">
+                <a href="#about" class="text-lg font-medium mobile-link">About</a>
+                <a href="#expertise" class="text-lg font-medium mobile-link">Expertise</a>
+                <a href="#ventures" class="text-lg font-medium mobile-link">Ventures</a>
+                <a href="#timeline" class="text-lg font-medium mobile-link">Timeline</a>
+                <a href="#contact" class="text-lg font-medium text-primary mobile-link mt-2 pt-4 border-t border-gray-200 dark:border-white/10">Initiate Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative pt-20 px-6">
+        <div class="max-w-5xl mx-auto text-center z-10">
+            <div class="gsap-reveal inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full glass-panel text-xs md:text-sm font-medium tracking-wide border-white/10">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+                </span>
+                Warsaw, Poland | Building Global Solutions
+            </div>
+            
+            <h1 class="gsap-reveal text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight tracking-tighter">
+                Bridging ideas & <br />
+                <span class="text-gradient">technology.</span>
+            </h1>
+            
+            <p class="gsap-reveal text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-10 h-10">
+                I am a <span id="typed-text" class="font-semibold text-gray-900 dark:text-white"></span>
+            </p>
+            
+            <div class="gsap-reveal flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#ventures" class="px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full hover:scale-105 transition-transform hover-target flex items-center gap-2 w-full sm:w-auto justify-center shadow-lg shadow-primary/20">
+                    Explore Ventures <i class="ph ph-rocket-launch"></i>
+                </a>
+                <a href="#contact" class="px-8 py-4 glass-panel font-bold rounded-full hover:bg-white/10 transition-colors hover-target flex items-center gap-2 w-full sm:w-auto justify-center">
+                    Initiate Contact
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Visual Side: Photo + Overlapping Stats -->
+                <div class="order-2 lg:order-1 relative mt-10 lg:mt-0">
+                    <!-- Profile Image Container -->
+                    <div class="relative w-full max-w-sm mx-auto lg:mr-auto rounded-[2rem] overflow-hidden gsap-reveal group border border-gray-200 dark:border-white/10 shadow-2xl" style="aspect-ratio: 3/4;">
+                        <!-- Gradient Overlay for blending -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-lightBg dark:from-darkBg via-transparent to-transparent z-10 opacity-80"></div>
+                        <div class="absolute inset-0 bg-primary/10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500"></div>
+                        
+                        <!-- Profile Photo with Permanent Black & White Effect -->
+                        <img src="Gemini_Generated_Image_1h8m9s1h8m9s1h8m.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop';" alt="Kamal Gyawali" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale contrast-125 brightness-90">
+                    </div>
+
+                    <!-- Floating Glass Card Stats -->
+                    <div class="glass-panel p-6 rounded-3xl absolute -bottom-10 right-0 md:-right-10 w-[90%] md:w-4/5 z-20 transform transition-transform duration-500 hover:scale-[1.02]" data-tilt data-tilt-max="5" data-tilt-speed="400">
+                        <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary/30 rounded-full filter blur-xl z-0"></div>
+                        
+                        <div class="grid grid-cols-2 gap-4 relative z-10">
+                            <div class="p-4 rounded-2xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-center backdrop-blur-md">
+                                <h4 class="text-3xl font-black text-primary mb-1 counter" data-target="14">0</h4>
+                                <p class="text-xs text-gray-800 dark:text-gray-300 uppercase tracking-wider font-semibold">Years Exp.</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-center backdrop-blur-md">
+                                <h4 class="text-3xl font-black text-accent mb-1 counter" data-target="4">0</h4>
+                                <p class="text-xs text-gray-800 dark:text-gray-300 uppercase tracking-wider font-semibold">Ventures</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Text Side -->
+                <div class="order-1 lg:order-2">
+                    <h2 class="text-sm font-bold tracking-widest text-primary uppercase mb-3 gsap-reveal">01. Origin & Mindset</h2>
+                    <h3 class="text-4xl md:text-5xl font-bold mb-8 gsap-reveal leading-tight">Multidisciplinary Builder & Investor.</h3>
+                    
+                    <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 gsap-reveal">
+                        My journey spans from teaching Computer Science and managing finances in Nepal to leading operations as Head of Food Services in Warsaw. 
+                    </p>
+                    <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 gsap-reveal">
+                        I don't just write code; I build businesses. From founding <span class="text-gray-900 dark:text-white font-semibold">Taste of Asia</span> in the hospitality sector to developing automated AI tools for content creation, my focus is on solving real-world problems.
+                    </p>
+                    <p class="text-lg text-gray-600 dark:text-gray-400 gsap-reveal">
+                        Today, I combine my decade of operational leadership with full-stack web development to build scalable digital solutions and automate business workflows.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UNIFIED EXPERTISE & SKILLS SECTION -->
+    <section id="expertise" class="py-24 px-6 relative z-10 border-t border-gray-200 dark:border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <!-- Unified Header -->
+            <div class="text-center mb-16">
+                <h2 class="text-sm font-bold tracking-widest text-primary uppercase mb-3 gsap-reveal">02. Arsenal</h2>
+                <h3 class="text-4xl md:text-5xl font-bold mb-4 gsap-reveal">Expertise & Skills</h3>
+                <p class="text-gray-500 dark:text-gray-400 gsap-reveal text-sm md:text-base max-w-2xl mx-auto">A multidisciplinary approach combining technical proficiency, operational leadership, and entrepreneurial vision.</p>
+            </div>
+
+            <div class="flex flex-col gap-12">
+                <!-- Tier 1: Core Pillars (The 3 Narrative Cards) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Skill Card 1 -->
+                    <div class="glass-panel p-8 rounded-3xl gsap-reveal hover-target border border-gray-200 dark:border-white/10 hover:border-primary/50 transition-colors group">
+                        <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+                            <i class="ph ph-code text-3xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Full-Stack Development</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Designing and maintaining responsive web apps. Experienced in integrating APIs, managing databases, and automating workflows for business operations.</p>
+                    </div>
+
+                    <!-- Skill Card 2 -->
+                    <div class="glass-panel p-8 rounded-3xl gsap-reveal hover-target border border-gray-200 dark:border-white/10 hover:border-accent/50 transition-colors group" style="transition-delay: 100ms;">
+                        <div class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 text-accent group-hover:scale-110 transition-transform">
+                            <i class="ph ph-robot text-3xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Crypto & AI Automation</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Deep understanding of algorithmic trading and market mechanics. Developing custom LLM workflows and automation tools like TikTok TTS readers.</p>
+                    </div>
+
+                    <!-- Skill Card 3 -->
+                    <div class="glass-panel p-8 rounded-3xl gsap-reveal hover-target border border-gray-200 dark:border-white/10 hover:border-success/50 transition-colors group" style="transition-delay: 200ms;">
+                        <div class="w-14 h-14 rounded-2xl bg-success/10 flex items-center justify-center mb-6 text-success group-hover:scale-110 transition-transform">
+                            <i class="ph ph-users-three text-3xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Operations Management</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Extensive background leading food services (Eurosia Group) and accounting. Proven ability to optimize workflows, oversee staff, and maintain strict compliance.</p>
+                    </div>
+                </div>
+
+                <!-- Tier 2: The Metrics Dashboard -->
+                <div class="glass-panel rounded-3xl p-8 md:p-12 gsap-reveal border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-none">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        
+                        <!-- Left: Progress Bars -->
+                        <div class="flex flex-col gap-8">
+                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Proficiency Metrics</h4>
+                            <!-- Crypto Trading -->
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-semibold text-sm text-gray-800 dark:text-gray-200">Crypto Trading</span>
+                                    <span class="text-gray-500 text-xs font-mono">90%</span>
+                                </div>
+                                <div class="w-full bg-black/5 dark:bg-[#1a1a1a] rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-[#10b981] h-1.5 rounded-full progress-bar" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <!-- Web Automation -->
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-semibold text-sm text-gray-800 dark:text-gray-200">Web Automation</span>
+                                    <span class="text-gray-500 text-xs font-mono">85%</span>
+                                </div>
+                                <div class="w-full bg-black/5 dark:bg-[#1a1a1a] rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-[#8b5cf6] h-1.5 rounded-full progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <!-- AI Tools -->
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-semibold text-sm text-gray-800 dark:text-gray-200">AI Tools</span>
+                                    <span class="text-gray-500 text-xs font-mono">80%</span>
+                                </div>
+                                <div class="w-full bg-black/5 dark:bg-[#1a1a1a] rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-[#3b82f6] h-1.5 rounded-full progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <!-- Business Strategy -->
+                            <div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="font-semibold text-sm text-gray-800 dark:text-gray-200">Business Strategy</span>
+                                    <span class="text-gray-500 text-xs font-mono">85%</span>
+                                </div>
+                                <div class="w-full bg-black/5 dark:bg-[#1a1a1a] rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-[#f97316] h-1.5 rounded-full progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Cards & Tech Stack -->
+                        <div class="flex flex-col gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Multilingual -->
+                                <div class="bg-white/50 dark:bg-[#0a0a0a]/50 border border-gray-200 dark:border-white/5 p-6 rounded-2xl text-center flex flex-col items-center justify-center hover:border-[#10b981]/50 transition-colors">
+                                    <div class="w-10 h-10 rounded-xl bg-[#10b981]/10 flex items-center justify-center mb-4 text-[#10b981]">
+                                        <i class="ph-fill ph-globe text-xl"></i>
+                                    </div>
+                                    <h5 class="text-base font-bold mb-1 text-gray-900 dark:text-white">Multilingual</h5>
+                                    <p class="text-[11px] text-gray-500">Nepali, English, Polish</p>
+                                </div>
+                                <!-- Risk Mgmt -->
+                                <div class="bg-white/50 dark:bg-[#0a0a0a]/50 border border-gray-200 dark:border-white/5 p-6 rounded-2xl text-center flex flex-col items-center justify-center hover:border-[#8b5cf6]/50 transition-colors">
+                                    <div class="w-10 h-10 rounded-xl bg-[#8b5cf6]/10 flex items-center justify-center mb-4 text-[#8b5cf6]">
+                                        <i class="ph-fill ph-trend-up text-xl"></i>
+                                    </div>
+                                    <h5 class="text-base font-bold mb-1 text-gray-900 dark:text-white">Risk Mgmt</h5>
+                                    <p class="text-[11px] text-gray-500">Capital Preservation</p>
+                                </div>
+                            </div>
+                            <!-- Tech Stack -->
+                            <div class="bg-white/50 dark:bg-[#0a0a0a]/50 border border-gray-200 dark:border-white/5 p-6 rounded-2xl text-center flex flex-col items-center justify-center hover:border-primary/50 transition-colors">
+                                <h5 class="text-base font-bold mb-4 text-gray-900 dark:text-white">Technical Stack</h5>
+                                <div class="flex flex-wrap justify-center gap-2">
+                                    <span class="text-[10px] font-mono font-bold tracking-wider bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 px-3 py-1.5 rounded-md text-gray-600 dark:text-gray-400 shadow-sm dark:shadow-none hover:text-primary transition-colors cursor-default">REACT</span>
+                                    <span class="text-[10px] font-mono font-bold tracking-wider bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 px-3 py-1.5 rounded-md text-gray-600 dark:text-gray-400 shadow-sm dark:shadow-none hover:text-primary transition-colors cursor-default">NODE.JS</span>
+                                    <span class="text-[10px] font-mono font-bold tracking-wider bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 px-3 py-1.5 rounded-md text-gray-600 dark:text-gray-400 shadow-sm dark:shadow-none hover:text-primary transition-colors cursor-default">PYTHON</span>
+                                    <span class="text-[10px] font-mono font-bold tracking-wider bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 px-3 py-1.5 rounded-md text-gray-600 dark:text-gray-400 shadow-sm dark:shadow-none hover:text-primary transition-colors cursor-default">TAILWIND</span>
+                                    <span class="text-[10px] font-mono font-bold tracking-wider bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 px-3 py-1.5 rounded-md text-gray-600 dark:text-gray-400 shadow-sm dark:shadow-none hover:text-primary transition-colors cursor-default">AI APIS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ventures & Projects -->
+    <section id="ventures" class="py-24 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+                <div>
+                    <h2 class="text-sm font-bold tracking-widest text-primary uppercase mb-3 gsap-reveal">03. The Work</h2>
+                    <h3 class="text-4xl md:text-5xl font-bold gsap-reveal">Projects & Ventures</h3>
+                </div>
+                <div class="mt-4 md:mt-0 gsap-reveal">
+                    <p class="text-gray-500 max-w-sm text-sm">A selection of my digital products, businesses, and concepts shaping my portfolio.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="ventures-grid">
+                <!-- Venture 1 -->
+                <div class="glass-panel rounded-3xl overflow-hidden group venture-card cursor-none" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2" style="transform-style: preserve-3d; opacity: 0;">
+                    <div class="h-64 overflow-hidden relative border-b border-gray-200 dark:border-white/10" style="transform: translateZ(30px);">
+                        <div class="absolute inset-0 bg-primary/20 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500"></div>
+                        <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=1000&auto=format&fit=crop" alt="Trading Signals" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 z-20 glass-panel px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md">FinTech</div>
+                    </div>
+                    <div class="p-8" style="transform: translateZ(40px);">
+                        <h4 class="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">Crypto Signal Platform</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">A comprehensive web platform delivering real-time technical analysis and automated trading signals derived from custom algorithms.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">Web App</span>
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">API Integration</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venture 2 -->
+                <div class="glass-panel rounded-3xl overflow-hidden group venture-card cursor-none" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2" style="transform-style: preserve-3d; opacity: 0;">
+                    <div class="h-64 overflow-hidden relative border-b border-gray-200 dark:border-white/10" style="transform: translateZ(30px);">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop" alt="AI TikTok" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 z-20 glass-panel px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md text-accent">AI / Creator</div>
+                    </div>
+                    <div class="p-8" style="transform: translateZ(40px);">
+                        <h4 class="text-2xl font-bold mb-2 group-hover:text-accent transition-colors">TikTok TTS Automator</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">An AI-driven automation tool that scrapes viral comments, converts them to highly engaging Text-to-Speech audio, and generates video assets.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">Python</span>
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">AI/ML</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venture 3 -->
+                <div class="glass-panel rounded-3xl overflow-hidden group venture-card cursor-none" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2" style="transform-style: preserve-3d; opacity: 0;">
+                    <div class="h-64 overflow-hidden relative border-b border-gray-200 dark:border-white/10" style="transform: translateZ(30px);">
+                        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=1000&auto=format&fit=crop" alt="Taste of Asia" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 z-20 glass-panel px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md text-orange-400">Hospitality</div>
+                    </div>
+                    <div class="p-8" style="transform: translateZ(40px);">
+                        <h4 class="text-2xl font-bold mb-2 group-hover:text-orange-400 transition-colors">Taste of Asia (Restaurant)</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">A successful physical restaurant business based in Poland. Overseeing digital footprint, delivery integrations, and brand identity.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">Management</span>
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">Local SEO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venture 4 -->
+                <div class="glass-panel rounded-3xl overflow-hidden group venture-card cursor-none" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2" style="transform-style: preserve-3d; opacity: 0;">
+                    <div class="h-64 overflow-hidden relative border-b border-gray-200 dark:border-white/10" style="transform: translateZ(30px);">
+                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-purple-900 opacity-80 z-10 group-hover:opacity-60 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1000&auto=format&fit=crop" alt="Digital Dhukuti" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 z-20 glass-panel px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md text-success">Concept</div>
+                    </div>
+                    <div class="p-8" style="transform: translateZ(40px);">
+                        <h4 class="text-2xl font-bold mb-2 group-hover:text-success transition-colors">Digital Dhukuti</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">A conceptual financial tech platform designed to modernize traditional Nepalese saving/credit circles (Dhukuti) using secure web technologies.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">UI/UX</span>
+                            <span class="text-xs bg-gray-200 dark:bg-white/10 px-2 py-1 rounded shadow-sm">Architecture</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline & Vision -->
+    <section id="timeline" class="py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-sm font-bold tracking-widest text-primary uppercase mb-3 text-center gsap-reveal">04. Milestones</h2>
+            <h3 class="text-4xl md:text-5xl font-bold text-center mb-16 gsap-reveal">Journey so far</h3>
+
+            <div class="relative border-l border-gray-300 dark:border-white/10 ml-4 md:ml-1/2">
+                <!-- Item 1 -->
+                <div class="mb-12 ml-8 relative gsap-reveal">
+                    <span class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-primary border-4 border-lightBg dark:border-darkBg"></span>
+                    <div class="text-xs font-bold text-primary mb-1 tracking-wider">FUTURE</div>
+                    <h4 class="text-xl font-bold mb-2">Expanding the Nepal-Europe Tech Bridge</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Focusing on AI-driven educational content and deploying "Digital Dhukuti" into a viable MVP for cross-border financial empowerment.</p>
+                </div>
+                <!-- Item 2 -->
+                <div class="mb-12 ml-8 relative gsap-reveal">
+                    <span class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-accent border-4 border-lightBg dark:border-darkBg"></span>
+                    <div class="text-xs font-bold text-accent mb-1 tracking-wider">PRESENT</div>
+                    <h4 class="text-xl font-bold mb-2">Content Creation & AI Tools</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Growing a presence on YouTube and TikTok focusing on immigration, tech, and finance, backed by custom AI automation pipelines.</p>
+                </div>
+                <!-- Item 3 -->
+                <div class="mb-12 ml-8 relative gsap-reveal">
+                    <span class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-gray-400 border-4 border-lightBg dark:border-darkBg"></span>
+                    <div class="text-xs font-bold text-gray-500 mb-1 tracking-wider">PAST</div>
+                    <h4 class="text-xl font-bold mb-2">Establishing Roots in Europe</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Began my career as a Computer Science Tutor and Accountant in Nepal. Relocated to Poland, rising to Head of Food Services at Eurosia Group while building my technical expertise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terminal Contact Section -->
+    <section id="contact" class="py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-panel rounded-xl overflow-hidden shadow-2xl border border-gray-300 dark:border-white/10 gsap-reveal">
+                <!-- Terminal Header -->
+                <div class="terminal-header px-4 py-3 flex items-center bg-gray-200 dark:bg-[#1a1a1a]">
+                    <div class="flex gap-2">
+                        <div class="mac-btn bg-red-500"></div>
+                        <div class="mac-btn bg-yellow-500"></div>
+                        <div class="mac-btn bg-green-500"></div>
+                    </div>
+                    <div class="mx-auto text-xs font-mono text-gray-500 font-semibold tracking-wider">kamal@warsaw: ~/contact</div>
+                </div>
+                
+                <!-- Terminal Body -->
+                <div class="p-6 md:p-8 font-mono text-sm md:text-base bg-white dark:bg-[#0a0a0a] text-gray-800 dark:text-gray-300">
+                    <p class="mb-4"><span class="text-green-600 dark:text-success">visitor@portfolio</span>:<span class="text-blue-600 dark:text-primary">~</span>$ ./initiate_contact.sh</p>
+                    <p class="mb-6 opacity-80">Loading secure comms channel...</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <p class="text-gray-500 mb-2">// DIRECT CONNECTION</p>
+                            <a href="mailto:kamal2u2@gmail.com" class="block text-primary hover:text-accent transition-colors mb-2 hover-target">> Send Email</a>
+                            <a href="https://www.linkedin.com/in/kamal-gyawali-247a10231/" target="_blank" class="block text-primary hover:text-accent transition-colors mb-2 hover-target">> LinkedIn Profile</a>
+                            <a href="https://github.com/kamal2u2" target="_blank" class="block text-primary hover:text-accent transition-colors hover-target">> GitHub (kamal2u2)</a>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 mb-2">// CONTENT CHANNELS</p>
+                            <a href="https://www.tiktok.com/@gharbatatadha" target="_blank" class="block text-primary hover:text-accent transition-colors hover-target">> TikTok (@gharbatatadha)</a>
+                        </div>
+                    </div>
+
+                    <p class="mb-2"><span class="text-green-600 dark:text-success">visitor@portfolio</span>:<span class="text-blue-600 dark:text-primary">~</span>$ <span class="animate-[pulse_1s_step-end_infinite] inline-block w-2.5 h-4 bg-gray-800 dark:bg-white align-middle ml-1"></span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center border-t border-gray-200 dark:border-white/5 relative z-10 glass-panel">
+        <p class="text-gray-500 text-sm font-medium">
+            Designed & Engineered by Kamal Gyawali <br>
+            <span class="text-xs opacity-70 mt-2 inline-block font-mono">Status: Operating from Warsaw, PL | Hosted on GitHub Pages</span>
+        </p>
+    </footer>
+
+    <!-- Core Interactive Scripts -->
+    <script>
+        // 1. Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // Check local storage or default to dark
+        if (localStorage.getItem('theme') === 'light') {
+            htmlElement.classList.remove('dark');
+            htmlElement.classList.add('light');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            htmlElement.classList.toggle('light');
+            
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                updateThreeJSColor(0x3b82f6); // Switch particle color based on theme if desired
+            } else {
+                localStorage.setItem('theme', 'light');
+                updateThreeJSColor(0x8b5cf6); // Purple for light mode
+            }
+        });
+
+        // 2. Custom Cursor Logic (Restored to stable version)
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, button');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Direct mapping for dot
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            // Smooth lerp for outline
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+            });
+            target.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // 3. Typed.js Initialization
+        new Typed('#typed-text', {
+            strings: ['Full-Stack Developer.', 'Tech Entrepreneur.', 'Crypto Analyst.', 'AI Integrator.'],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 2000,
+            loop: true,
+            cursorChar: '|',
+        });
+
+        // 4. GSAP Scroll Reveals & Counters
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Standard fade up reveal
+        gsap.utils.toArray('.gsap-reveal').forEach(function(elem) {
+            gsap.fromTo(elem, 
+                { y: 50, autoAlpha: 0 }, 
+                {
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    duration: 1, 
+                    y: 0, 
+                    autoAlpha: 1, 
+                    ease: "power3.out"
+                }
+            );
+        });
+
+        // Staggered reveal specifically for Venture Cards
+        gsap.fromTo(".venture-card", 
+            { y: 80, opacity: 0, scale: 0.95 }, 
+            {
+                scrollTrigger: {
+                    trigger: "#ventures-grid",
+                    start: "top 80%",
+                },
+                duration: 0.8, 
+                y: 0, 
+                opacity: 1, 
+                scale: 1,
+                stagger: 0.2, // This creates the 0.2s delay between each card animating in
+                ease: "back.out(1.2)" // Gives a slight, premium "spring" effect
+            }
+        );
+
+        // Animated Counters
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            ScrollTrigger.create({
+                trigger: counter,
+                start: "top 90%",
+                once: true,
+                onEnter: () => {
+                    const target = +counter.getAttribute('data-target');
+                    gsap.to(counter, {
+                        innerHTML: target,
+                        duration: 2,
+                        snap: { innerHTML: 1 },
+                        ease: "power1.inOut",
+                        onUpdate: function() {
+                            counter.innerHTML = Math.round(counter.innerHTML) + "+";
+                        }
+                    });
+                }
+            });
+        });
+
+        // Animate Progress Bars
+        gsap.utils.toArray('.progress-bar').forEach(function(bar) {
+            const finalWidth = bar.style.width;
+            gsap.fromTo(bar, 
+                { width: "0%" }, 
+                {
+                    scrollTrigger: {
+                        trigger: bar,
+                        start: "top 85%",
+                        once: true
+                    },
+                    width: finalWidth,
+                    duration: 1.5,
+                    ease: "power3.out"
+                }
+            );
+        });
+
+        // 5. Three.js Interactive Particle Network
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        let material;
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            // Fog to fade particles in distance
+            scene.fog = new THREE.FogExp2(0x000000, 0.0008);
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+            camera.position.z = 1000;
+
+            // Particles
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            
+            for (let i = 0; i < 2000; i++) {
+                const x = 2000 * Math.random() - 1000;
+                const y = 2000 * Math.random() - 1000;
+                const z = 2000 * Math.random() - 1000;
+                vertices.push(x, y, z);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+            // Default color based on theme
+            const isLight = htmlElement.classList.contains('light');
+            material = new THREE.PointsMaterial({ 
+                color: isLight ? 0x8b5cf6 : 0x3b82f6, 
+                size: 3, 
+                transparent: true,
+                opacity: 0.6
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            window.addEventListener('resize', onWindowResize);
+            
+            animate();
+        }
+
+        function updateThreeJSColor(hexColor) {
+            if(material) {
+                gsap.to(material.color, {
+                    r: new THREE.Color(hexColor).r,
+                    g: new THREE.Color(hexColor).g,
+                    b: new THREE.Color(hexColor).b,
+                    duration: 1
+                });
+            }
+        }
+
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = event.clientX - windowHalfX;
+            mouseY = event.clientY - windowHalfY;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+
+        function render() {
+            // Smoothly move camera based on mouse
+            camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            
+            // Slow rotation of the entire particle system
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.001;
+            
+            renderer.render(scene, camera);
+        }
+
+        // Initialize 3D bg
+        initThreeJS();
+
+        // 6. Navbar Blur on Scroll
+        const navbar = document.getElementById('navbar');
+        const navContainer = document.getElementById('nav-container');
+        const scrollProgress = document.getElementById('scroll-progress');
+        
+        window.addEventListener('scroll', () => {
+            // Navbar Shrink & Shadow
+            if (window.scrollY > 50) {
+                navContainer.classList.add('shadow-lg', 'py-2');
+                navContainer.classList.remove('py-4');
+            } else {
+                navContainer.classList.add('py-4');
+                navContainer.classList.remove('shadow-lg', 'py-2');
+            }
+
+            // Scroll Progress Indicator
+            const scrollTotal = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTotal / height);
+            scrollProgress.style.transform = `scaleX(${scrollPercent})`;
+        });
+
+        // 7. Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const mobileMenuIcon = mobileMenuBtn.querySelector('i');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('closed')) {
+                mobileMenu.classList.remove('closed');
+                mobileMenu.classList.add('open');
+                mobileMenuIcon.classList.replace('ph-list', 'ph-x');
+            } else {
+                mobileMenu.classList.remove('open');
+                mobileMenu.classList.add('closed');
+                mobileMenuIcon.classList.replace('ph-x', 'ph-list');
+            }
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                mobileMenu.classList.add('closed');
+                mobileMenuIcon.classList.replace('ph-x', 'ph-list');
+            });
+        });
+
+    </script>
+</body>
+</html>
