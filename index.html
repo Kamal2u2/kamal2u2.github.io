@@ -185,7 +185,7 @@
     <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center glass-panel rounded-b-2xl md:rounded-full md:mt-4 md:mx-auto md:w-[95%] border-t-0 transition-all duration-300" id="nav-container">
             <a href="#home" class="text-xl font-bold tracking-tight hover-target flex items-center gap-3">
-                <img src="./profile.jpg" alt="Kamal Gyawali" class="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-white/20 grayscale contrast-125 brightness-90 shadow-sm">
+                <img src="https://kamal2u2.github.io/profile.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Kamal+Gyawali&background=3b82f6&color=fff';" alt="Kamal Gyawali" class="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-white/20 grayscale contrast-125 brightness-90 shadow-sm">
                 KAMAL<span class="text-primary">.</span>
             </a>
             
@@ -261,29 +261,36 @@
         <div class="max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <!-- Visual Side: Photo + Overlapping Stats -->
-                <div class="order-2 lg:order-1 relative mt-10 lg:mt-0">
-                    <!-- Profile Image Container -->
-                    <div class="relative w-full max-w-sm mx-auto lg:mr-auto rounded-[2rem] overflow-hidden gsap-reveal group border border-gray-200 dark:border-white/10 shadow-2xl" style="aspect-ratio: 3/4;">
-                        <!-- Gradient Overlay for blending -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-lightBg dark:from-darkBg via-transparent to-transparent z-10 opacity-80"></div>
-                        <div class="absolute inset-0 bg-primary/10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500"></div>
+                <div class="order-2 lg:order-1 relative mt-10 lg:mt-0 flex justify-center lg:justify-start">
+                    <!-- Tight Wrapper for perfect alignment -->
+                    <div class="relative w-full max-w-sm">
                         
-                        <!-- Profile Photo with Permanent Black & White Effect -->
-                        <img src="./profile.jpg" alt="Kamal Gyawali" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale contrast-125 brightness-90">
-                    </div>
+                        <!-- Profile Image Container -->
+                        <div class="relative w-full rounded-[2rem] overflow-hidden gsap-reveal group border border-gray-200 dark:border-white/10 shadow-2xl" style="aspect-ratio: 3/4;">
+                            <!-- Gradient Overlay for blending -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-lightBg dark:from-darkBg via-transparent to-transparent z-10 opacity-80"></div>
+                            <div class="absolute inset-0 bg-primary/10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500"></div>
+                            
+                            <!-- Profile Photo with Permanent Black & White Effect -->
+                            <img src="https://kamal2u2.github.io/profile.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Kamal+Gyawali&background=3b82f6&color=fff&size=512';" alt="Kamal Gyawali" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale contrast-125 brightness-90">
+                        </div>
 
-                    <!-- Floating Glass Card Stats -->
-                    <div class="glass-panel p-6 rounded-3xl absolute -bottom-10 right-0 md:-right-10 w-[90%] md:w-4/5 z-20 transform transition-transform duration-500 hover:scale-[1.02]" data-tilt data-tilt-max="5" data-tilt-speed="400">
-                        <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary/30 rounded-full filter blur-xl z-0"></div>
-                        
-                        <div class="grid grid-cols-2 gap-4 relative z-10">
-                            <div class="p-4 rounded-2xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-center backdrop-blur-md">
-                                <h4 class="text-3xl font-black text-primary mb-1 counter" data-target="14">0</h4>
-                                <p class="text-xs text-gray-800 dark:text-gray-300 uppercase tracking-wider font-semibold">Years Exp.</p>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-center backdrop-blur-md">
-                                <h4 class="text-3xl font-black text-accent mb-1 counter" data-target="4">0</h4>
-                                <p class="text-xs text-gray-800 dark:text-gray-300 uppercase tracking-wider font-semibold">Ventures</p>
+                        <!-- Positioning Wrapper for Perfect Centering -->
+                        <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[95%] sm:w-[90%] z-20">
+                            <!-- Floating Glass Card Stats -->
+                            <div class="glass-panel p-6 rounded-3xl w-full transition-transform duration-500" data-tilt data-tilt-max="5" data-tilt-speed="400">
+                                <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary/30 rounded-full filter blur-xl z-0 pointer-events-none"></div>
+                                
+                                <div class="grid grid-cols-2 gap-4 relative z-10">
+                                    <div class="p-4 rounded-2xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-center backdrop-blur-md">
+                                        <h4 class="text-3xl font-black text-primary mb-1 counter" data-target="14">0</h4>
+                                        <p class="text-xs text-gray-800 dark:text-gray-300 uppercase tracking-wider font-semibold">Years Exp.</p>
+                                    </div>
+                                    <div class="p-4 rounded-2xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-center backdrop-blur-md">
+                                        <h4 class="text-3xl font-black text-accent mb-1 counter" data-target="4">0</h4>
+                                        <p class="text-xs text-gray-800 dark:text-gray-300 uppercase tracking-wider font-semibold">Ventures</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
